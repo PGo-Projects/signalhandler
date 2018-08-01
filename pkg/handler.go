@@ -7,16 +7,17 @@ import (
 
 type HandlerFunc func()
 
-type signalHandler struct {
+type SignalHandler struct {
 	channel    chan os.Signal
 	handler    HandlerFunc
 	oldHandler HandlerFunc
+	_          struct{}
 }
 
-func New(handler HandlerFunc, sig ...os.Signal) *signalHandler {
+func New(handler HandlerFunc, sig ...os.Signal) *SignalHandler {
 	sigchan := make(chan os.Signal, 2)
 	signal.Notify(sigchan, sig...)
-	h := &signalHandler{
+	h := &SignalHandler{
 		channel: sigchan,
 		handler: handler,
 	}
@@ -24,7 +25,7 @@ func New(handler HandlerFunc, sig ...os.Signal) *signalHandler {
 	return h
 }
 
-func (s *signalHandler) listen() {
+func (s *SignalHandler) listen() {
 	go func() {
 		for {
 			<-s.channel
@@ -33,7 +34,7 @@ func (s *signalHandler) listen() {
 	}()
 }
 
-func (s *signalHandler) WithSignalBlocked(signalFreeFunc func()) {
+func (s *SignalHandler) WithSignalBlocked(signalFreeFunc func()) {
 	s.oldHandler = s.handler
 	signalRaised := false
 	s.handler = func() {
@@ -46,6 +47,6 @@ func (s *signalHandler) WithSignalBlocked(signalFreeFunc func()) {
 	}
 }
 
-func (s *signalHandler) SetHandler(handler HandlerFunc) {
+func (s *SignalHandler) SetHandler(handler HandlerFunc) {
 	s.handler = handler
 }
