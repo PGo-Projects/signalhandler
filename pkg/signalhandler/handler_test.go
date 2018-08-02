@@ -14,9 +14,10 @@ func sampleHandler() {
 
 func TestSignalHandler(t *testing.T) {
 	handler := New(sampleHandler, os.Interrupt, syscall.SIGTERM)
-	handler.WithSignalBlocked(func() {
+	handler.WithSignalBlocked(func() error {
 		fmt.Println("Inside Ctrl-C free environment")
 		time.Sleep(5 * time.Second)
 		fmt.Println("Exiting Ctrl-C free environment")
+		return nil
 	})
 }
