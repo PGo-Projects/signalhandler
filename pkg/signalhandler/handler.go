@@ -34,11 +34,11 @@ func (s *SignalHandler) listen() {
 	}()
 }
 
-func (s *SignalHandler) WithSignalBlocked(signalFreeFunc func() error) (err error) {
-	return s.WithSignalBlockedAndSignalMessage(signalFreeFunc, nil)
+func (s *SignalHandler) WithSignalBlocked(signalFreeFunc func() error) error {
+	return s.WithSignalBlockedAndSignalMessageFunc(signalFreeFunc, nil)
 }
 
-func (s *SignalHandler) WithSignalBlockedAndSignalMessage(signalFreeFunc func() error, messageFunc func()) (err error) {
+func (s *SignalHandler) WithSignalBlockedAndSignalMessageFunc(signalFreeFunc func() error, messageFunc func()) error {
 	s.oldHandler = s.handler
 	signalRaised := false
 	s.handler = func() {
@@ -52,7 +52,7 @@ func (s *SignalHandler) WithSignalBlockedAndSignalMessage(signalFreeFunc func() 
 	if signalRaised {
 		s.handler()
 	}
-	return
+	return err
 }
 
 func (s *SignalHandler) SetHandler(handler HandlerFunc) {
