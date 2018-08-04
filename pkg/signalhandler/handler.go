@@ -1,7 +1,6 @@
 package signalhandler
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 )
@@ -36,16 +35,16 @@ func (s *SignalHandler) listen() {
 }
 
 func (s *SignalHandler) WithSignalBlocked(signalFreeFunc func() error) (err error) {
-	return s.WithSignalBlockedAndSignalMessage(signalFreeFunc, "")
+	return s.WithSignalBlockedAndSignalMessage(signalFreeFunc, nil)
 }
 
-func (s *SignalHandler) WithSignalBlockedAndSignalMessage(signalFreeFunc func() error, message string) (err error) {
+func (s *SignalHandler) WithSignalBlockedAndSignalMessage(signalFreeFunc func() error, messageFunc func()) (err error) {
 	s.oldHandler = s.handler
 	signalRaised := false
 	s.handler = func() {
 		signalRaised = true
-		if message != "" {
-			fmt.Printf("\n%s\n", message)
+		if messageFunc != nil {
+			messageFunc()
 		}
 	}
 	err = signalFreeFunc()
