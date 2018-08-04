@@ -47,7 +47,7 @@ func (s *SignalHandler) WithSignalBlockedAndSignalMessageFunc(signalFreeFunc fun
 			messageFunc()
 		}
 	}
-	err = signalFreeFunc()
+	err := signalFreeFunc()
 	s.handler = s.oldHandler
 	if signalRaised {
 		s.handler()
