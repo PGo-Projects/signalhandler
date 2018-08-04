@@ -24,7 +24,7 @@ func TestSignalHandler(t *testing.T) {
 
 func TestSignalHandlerWithSignalMessage(t *testing.T) {
 	handler := New(sampleHandler, os.Interrupt, syscall.SIGTERM)
-	handler.WithSignalBlockedAndSignalMessage(func() error {
+	handler.WithSignalBlockedAndSignalMessageFunc(func() error {
 		fmt.Println("Inside Ctrl-C free environment")
 		time.Sleep(5 * time.Second)
 		fmt.Println("Exiting Ctrl-C free environment")
