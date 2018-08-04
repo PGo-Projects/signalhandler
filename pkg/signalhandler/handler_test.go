@@ -29,6 +29,7 @@ func TestSignalHandlerWithSignalMessage(t *testing.T) {
 		time.Sleep(5 * time.Second)
 		fmt.Println("Exiting Ctrl-C free environment")
 		return nil
-	},
-		"Finishing up!")
+	}, func() {
+		fmt.Println("The signal is being ignored")
+	})
 }
